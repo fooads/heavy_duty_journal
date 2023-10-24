@@ -1,42 +1,12 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from db import database_cursor
-from pydantic import BaseModel
+from models.m_workout_history import WorkoutHistory
 
 
-app = FastAPI(
-    title="Heavy Duty API",
-    version="0.1.0",
-    docs_url="/docs"
-)
+router = APIRouter(prefix="/workout_history", tags=['Workout History'])
 
 
-class WorkoutHistory(BaseModel):
-    workout_history_id: int
-    workout_history_name: str
-    workout_history_session_count: int
-
-
-
-@app.get("/")
-async def root():
-    return {"message":"Hello World"}
-
-
-@app.get("/fetch_all")
-async def fetch():
-    sql_query = """
-    SELECT *
-    FROM students
-    """
-    database_cursor.execute(sql_query)
-    students_data = database_cursor.fetchall()
-    row = students_data[0]
-
-    # students = [Student(**student) for student in students_data]
-    return students_data
-
-
-@app.get("/workout_history/fetch_all")
+@router.get("/workout_history/fetch_all")
 async def fetch_all_workout_history():
     sql_query = """
     SELECT *
@@ -48,7 +18,7 @@ async def fetch_all_workout_history():
     return {"status": "SUCCESS", "data": response}
 
 
-@app.post("/workout_history/create")
+@router.post("/workout_history/create")
 async def create_workout_history(workout_history_name: str):
     sql_query = """
     INSERt INTO workout_histories (workout_history_name, session_count)
@@ -59,7 +29,7 @@ async def create_workout_history(workout_history_name: str):
     return {"status": "SUCCESS"}
 
 
-@app.delete("/workout_history/delete")
+@router.delete("/workout_history/delete")
 async def delete_workout_history(workout_history_id: int):
     sql_query = """
     DELETE FROM workout_histories
