@@ -6,7 +6,7 @@ from models.m_workout_history import WorkoutHistory
 router = APIRouter(prefix="/workout_history", tags=['Workout History'])
 
 
-@router.get("/workout_history/fetch_all")
+@router.get("/fetch_all")
 async def fetch_all_workout_history():
     sql_query = """
     SELECT *
@@ -18,7 +18,7 @@ async def fetch_all_workout_history():
     return {"status": "SUCCESS", "data": response}
 
 
-@router.post("/workout_history/create")
+@router.post("/create")
 async def create_workout_history(workout_history_name: str):
     sql_query = """
     INSERt INTO workout_histories (workout_history_name, session_count)
@@ -29,7 +29,7 @@ async def create_workout_history(workout_history_name: str):
     return {"status": "SUCCESS"}
 
 
-@router.delete("/workout_history/delete")
+@router.delete("/delete")
 async def delete_workout_history(workout_history_id: int):
     sql_query = """
     DELETE FROM workout_histories
